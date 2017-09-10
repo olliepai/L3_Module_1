@@ -2,6 +2,9 @@ package intro_to_file_io;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,24 +16,42 @@ import javax.swing.JPanel;
 
 public class Assignment4 implements ActionListener {
 	ArrayList<String> toDoList = new ArrayList<String>();
-	
+
 	public static void main(String[] args) {
 		Assignment4 toDo = new Assignment4();
 		toDo.UI();
 	}
-	
+
 	JButton addTask;
 	JButton removeTask;
 	JButton save;
 	JButton load;
-	
+
 	public void UI() {
-		String list = "";
-		for (String element : toDoList) {
-			list += element + "\n";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("src/intro_to_file_io/test2.txt"));
+
+			String line = br.readLine();
+			String list = "";
+			while (line != null) {			
+				list += line + "\n";
+				toDoList.add(line);
+				line = br.readLine();
+			}
+			
+			JOptionPane.showMessageDialog(null, list);
+			
+			
+
+			br.close();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		JOptionPane.showMessageDialog(null, list);
-		
+
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
 		JPanel panel = new JPanel();
@@ -78,9 +99,8 @@ public class Assignment4 implements ActionListener {
 			}
 			try {
 				FileWriter fw = new FileWriter("src/intro_to_file_io/test2.txt", true);
-				
 				fw.write(list);
-					
+
 				fw.close();
 			} catch (IOException x) {
 				x.printStackTrace();
